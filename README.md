@@ -10,7 +10,7 @@ Tutor a cargo:
 El proyecto constituye un sistema de gestión de turnos para un hospital/clinica
 
 
-## Estructura del poryecto
+## Estructura del proyecto
 
 
 ## Tecnologias a utilizar
