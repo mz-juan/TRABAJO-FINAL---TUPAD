@@ -18,13 +18,13 @@ Se propone el desarrollo de una aplicación web que centralice la gestión de tu
 
 
 ## Estructura del proyecto
-
+```
 gestion-turnos/
 ├── backend/                      # API REST en Node.js + TypeScript
 │   ├── prisma/
-│   │   ├── schema.prisma         # Esquema de base de datos relacional
+│   │   └── schema.prisma         # Esquema de base de datos relacional
 │   ├── src/
-│   │   ├── controllers/          # Controladores 
+│   │   ├── controllers/          # Controladores
 │   │   ├── services/             # Lógica de negocio y reglas de turnos
 │   │   ├── routes/               # Rutas y endpoints
 │   │   ├── middlewares/          # Manejo de errores
@@ -41,7 +41,7 @@ gestion-turnos/
 │   │   ├── components/           # Componentes reutilizables con sus estilos
 │   │   │   ├── Navbar/
 │   │   │   │   ├── Navbar.jsx
-│   │   │   │   └── Navbar.css    
+│   │   │   │   └── Navbar.css
 │   │   │   ├── Calendar/
 │   │   │   │   ├── Calendar.jsx
 │   │   │   │   └── Calendar.css
@@ -60,7 +60,7 @@ gestion-turnos/
 │   │   │   │   └── ReservaTurno.css
 │   │   │   ├── PanelMedico/
 │   │   │   └── Login/
-│   │   ├── services/             # Peticiones HTTP a la API 
+│   │   ├── services/             # Peticiones HTTP a la API
 │   │   ├── styles/               # Estilos globales y diseño del sistema
 │   │   │   ├── variables.css     # Colores de la clínica, fuentes, espaciados
 │   │   │   ├── reset.css         # Reseteo de márgenes y box-sizing
@@ -71,7 +71,7 @@ gestion-turnos/
 │   ├── package.json
 │   └── .env.example
 │
-├── database/                     # Scripts y documentacion
+├── database/                     # Scripts y documentación
 │   ├── ddl/
 │   │   └── 01_create_tables.sql  # Creación de tablas, claves foráneas e índices
 │   └── dml/
@@ -79,8 +79,10 @@ gestion-turnos/
 │
 ├── docs/                         # Informes y documentación
 │
-├── .gitignore                   
+├── .gitignore
 └── README.md                     # Documentación principal del repositorio
+```
+
 
 ## Tecnologias a utilizar
 
