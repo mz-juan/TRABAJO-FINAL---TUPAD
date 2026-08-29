@@ -6,7 +6,6 @@
 - Tutor a cargo: Gerardo Adrian Herrera
 
 ## Introducción
-
 El siguiente Trabajo Final de la carrera Tecnicatura Universitaria en Programacion a Distancia consiste en el desarrollo de un sistema de gestión de turnos para una institución de salud, diseñado para facilitar la organización y administración de las citas entre pacientes y profesionales.
 Poniendo en practica los conocimeintos y herramientas adquiridos durante la cursada, integrando diferentes conceptos de frontend, backend y base de datos.
 
@@ -20,6 +19,68 @@ Se propone el desarrollo de una aplicación web que centralice la gestión de tu
 
 ## Estructura del proyecto
 
+gestion-turnos/
+├── backend/                      # API REST en Node.js + TypeScript
+│   ├── prisma/
+│   │   ├── schema.prisma         # Esquema de base de datos relacional
+│   ├── src/
+│   │   ├── controllers/          # Controladores 
+│   │   ├── services/             # Lógica de negocio y reglas de turnos
+│   │   ├── routes/               # Rutas y endpoints
+│   │   ├── middlewares/          # Manejo de errores
+│   │   ├── types/                # Interfaces y tipos TypeScript
+│   │   ├── config/               # Configuración de base de datos y variables
+│   │   └── index.ts              # Entrada al servidor
+│   ├── tsconfig.json
+│   ├── package.json
+│   └── .env.example
+│
+├── frontend/                     # Aplicación React + Vite con CSS
+│   ├── src/
+│   │   ├── assets/               # Imágenes, logos e iconos
+│   │   ├── components/           # Componentes reutilizables con sus estilos
+│   │   │   ├── Navbar/
+│   │   │   │   ├── Navbar.jsx
+│   │   │   │   └── Navbar.css    
+│   │   │   ├── Calendar/
+│   │   │   │   ├── Calendar.jsx
+│   │   │   │   └── Calendar.css
+│   │   │   ├── Button/
+│   │   │   │   ├── Button.jsx
+│   │   │   │   └── Button.css
+│   │   │   └── ModalTurno/
+│   │   │       ├── ModalTurno.jsx
+│   │   │       └── ModalTurno.css
+│   │   ├── views/                # Vistas principales
+│   │   │   ├── Home/
+│   │   │   │   ├── Home.jsx
+│   │   │   │   └── Home.css
+│   │   │   ├── ReservaTurno/
+│   │   │   │   ├── ReservaTurno.jsx
+│   │   │   │   └── ReservaTurno.css
+│   │   │   ├── PanelMedico/
+│   │   │   └── Login/
+│   │   ├── services/             # Peticiones HTTP a la API 
+│   │   ├── styles/               # Estilos globales y diseño del sistema
+│   │   │   ├── variables.css     # Colores de la clínica, fuentes, espaciados
+│   │   │   ├── reset.css         # Reseteo de márgenes y box-sizing
+│   │   │   └── global.css        # Tipografías base y estilos comunes
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── .env.example
+│
+├── database/                     # Scripts y documentacion
+│   ├── ddl/
+│   │   └── 01_create_tables.sql  # Creación de tablas, claves foráneas e índices
+│   └── dml/
+│       └── 02_initial_seeds.sql  # Inserción de especialidades, admin y roles
+│
+├── docs/                         # Informes y documentación
+│
+├── .gitignore                   
+└── README.md                     # Documentación principal del repositorio
 
 ## Tecnologias a utilizar
 
@@ -30,3 +91,22 @@ Se propone el desarrollo de una aplicación web que centralice la gestión de tu
 - Despliegue del backend: Railway
 
 El stack tecnologico propuesto son herramientas vistas durante la cursada de la carrera, pero como equipo tambien contemplamos la posibilidad de ajustar alguna tecnologia sobre la marcha si surge alguna necesitad en concreto.
+
+## Desarrollo por Etapas
+
+### Etapa 1: Núcleo Operativo y Reserva Online (MVP)
+- **Módulo de autenticación:**
+  - Registro e inicio de sesión.
+  - Control de acceso basado en roles
+  - Persistencia de la sesión.
+- **Módulo de Pacientes:**
+  - Búsqueda de turnos filtrada por especialidad, profesional, cobertura y fecha.
+  - Reserva en horatios disponibles.
+  - Panel de gestión de turnos propios.
+  - Confirmación automática por correo electrónico.
+- **Módulo de Profesionales Médicos:**
+  - Visualización de agenda diaria y semanal.
+  - Configuración de disponibilidad horaria y bloqueo de fechas.
+- **Módulo de Administración y Recepción:**
+  - ABM (CRUD) de médicos, especialidades, consultorios y coberturas.
+  - Mesa de entrada para registro de pacientes.
