@@ -15,7 +15,8 @@ En clínicas y centros de salud de escala pequeña o mediana, la gestión de tur
 ### Solucion a plantear
 Se propone el desarrollo de una aplicación web que centralice la gestión de turnos de la clínica en una única plataforma accesible desde cualquier dispositivo con conexión a internet, eliminando la dependencia de planillas dispersas y comunicación telefónica como única vía de coordinación.
 
-
+### El valor agregado
+El valor agregado implica la habilitacion de algo que antes no era posible o no era eficiente. En este proyecto, eso se traduce en: reducir el tiempo administrativo que hoy se destina a coordinar agendas manualmente, ya que la adminsitracion de los turnos pasa a ser un proceso del sistema y el usuario es quien gestiona su propio turno; tambien se trata la eliminacion estructural de errores tecnicos, como por ejemplo, la doble reserva de horarios, entre otros.
 
 ## Estructura del proyecto
 ```
@@ -93,6 +94,11 @@ gestion-turnos/
 - Despliegue del backend: Railway
 
 El stack tecnologico propuesto son herramientas vistas durante la cursada de la carrera, pero como equipo tambien contemplamos la posibilidad de ajustar alguna tecnologia sobre la marcha si surge alguna necesitad en concreto.
+### Justificacion de cada tecnologia
+- Frontend (React + TS/JS + HTML/CSS): React permite organizar en componentes reutilizables las distintas vistas por rol (paciente, administrativo, profesional), y TypeScript agrega tipado estático que ayuda a prevenir errores en un dominio con muchas relaciones entre datos (turnos, pacientes, profesionales).
+- Backend (TypeScript): usar el mismo lenguaje en frontend y backend permite compartir tipos entre ambas capas y reduce el cambio de contexto entre lenguajes. Es adecuado para la escala del proyecto, centrada en operaciones CRUD y consultas relacionales.
+- Base de datos (MySQL): En este caso, se necesita una base de datos relacional porque el dominio tiene reglas de integridad estrictas (por ejemplo, evitar turnos superpuestos), algo que un modelo relacional garantiza mejor que uno NoSQL.
+- Despiegles de backend y frontend: estas plataformas permiten desplegar frontend y backend sin gestionar infraestructura propia y son utiles para la escala del proyecto.
 
 ## Desarrollo por Etapas
 
