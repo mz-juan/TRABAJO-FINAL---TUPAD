@@ -1,8 +1,8 @@
 # TRABAJO-FINAL---TUPAD
 
-## Integrantes
+## Integrante
 - Grupo: 210
-- Alumnos: Palacios Agustin; Martinez Juan
+- Alumno: Falacios Fernando Agustin
 - Tutor a cargo: Gerardo Adrian Herrera
 
 ## Introducción

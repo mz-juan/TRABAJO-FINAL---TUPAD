@@ -96,3 +96,155 @@ El sistema vincula de manera coordinada a tres actores principales:
 * **Componentes Backend:** Endpoints administrativos con verificación de rol `ADMIN`.
 * **Componentes Frontend:** `views/Admin/AdminDashboard.jsx`.
 * **Funcionalidad:** Carga y edición de médicos, especialidades y consultorios. Mesa de entrada con buscador por DNI para agendar turnos de pacientes en ventanilla. Métricas básicas de turnos asignados por especialidad.
+
+
+## 5. Diseño de base de datos (`backend/prisma/schema.prisma`)
+
+```prisma
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Rol {
+  ADMIN
+  MEDICO
+  PACIENTE
+}
+
+enum EstadoTurno {
+  CONFIRMADO
+  CANCELADO
+}
+
+model Usuario {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique @db.VarChar(150)
+  password  String    @db.VarChar(255)
+  rol       Rol       @default(PACIENTE)
+  activo    Boolean   @default(true)
+  creadoEn  DateTime  @default(now()) @map("creado_en")
+
+  paciente  Paciente?
+  medico    Medico?
+
+  @@map("usuarios")
+}
+
+model Cobertura {
+  id               Int               @id @default(autoincrement())
+  nombre           String            @unique @db.VarChar(100)
+  pacientes        Paciente[]
+  medicosAtendidos MedicoCobertura[]
+  turnos           Turno[]
+
+  @@map("coberturas")
+}
+
+model Paciente {
+  id          Int        @id @default(autoincrement())
+  usuarioId   Int        @unique @map("usuario_id")
+  nombre      String     @db.VarChar(100)
+  apellido    String     @db.VarChar(100)
+  dni         String     @unique @db.VarChar(20)
+  telefono    String?    @db.VarChar(30)
+  coberturaId Int?       @map("cobertura_id")
+  nroAfiliado String?    @map("nro_afiliado") @db.VarChar(50)
+
+  usuario     Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  cobertura   Cobertura? @relation(fields: [coberturaId], references: [id])
+  turnos      Turno[]
+
+  @@map("pacientes")
+}
+
+model Especialidad {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique @db.VarChar(100)
+  descripcion String?  @db.Text
+  medicos     Medico[]
+
+  @@map("especialidades")
+}
+
+model Medico {
+  id             Int               @id @default(autoincrement())
+  usuarioId      Int               @unique @map("usuario_id")
+  nombre         String            @db.VarChar(100)
+  apellido       String            @db.VarChar(100)
+  matricula      String            @unique @db.VarChar(50)
+  especialidadId Int               @map("especialidad_id")
+  consultorio    String?           @db.VarChar(20)
+
+  usuario        Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  especialidad   Especialidad      @relation(fields: [especialidadId], references: [id])
+  coberturas     MedicoCobertura[]
+  horarios       HorarioAtencion[]
+  bloqueos       BloqueoAgenda[]
+  turnos         Turno[]
+
+  @@map("medicos")
+}
+
+model MedicoCobertura {
+  medicoId      Int      @map("medico_id")
+  coberturaId   Int      @map("cobertura_id")
+  arancelCopago Decimal? @default(0.00) @map("arancel_copago") @db.Decimal(10, 2)
+
+  medico        Medico    @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  cobertura     Cobertura @relation(fields: [coberturaId], references: [id], onDelete: Cascade)
+
+  @@id([medicoId, coberturaId])
+  @@map("medicos_coberturas")
+}
+
+model HorarioAtencion {
+  id                   Int      @id @default(autoincrement())
+  medicoId             Int      @map("medico_id")
+  diaSemana            Int      @map("dia_semana") // 1=Lunes ... 6=Sábado
+  horaDesde            String   @map("hora_desde") @db.VarChar(5) // "08:00"
+  horaHasta            String   @map("hora_hasta") @db.VarChar(5) // "13:00"
+  duracionTurnoMinutos Int      @default(30) @map("duracion_turno_minutos")
+
+  medico               Medico   @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@map("horarios_atencion")
+}
+
+model BloqueoAgenda {
+  id         Int      @id @default(autoincrement())
+  medicoId   Int      @map("medico_id")
+  fechaDesde DateTime @map("fecha_desde")
+  fechaHasta DateTime @map("fecha_hasta")
+  motivo     String?  @db.VarChar(255)
+  creadoEn   DateTime @default(now()) @map("creado_en")
+
+  medico     Medico   @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+
+  @@map("bloqueos_agenda")
+}
+
+model Turno {
+  id             Int         @id @default(autoincrement())
+  pacienteId     Int         @map("paciente_id")
+  medicoId       Int         @map("medico_id")
+  coberturaId    Int?        @map("cobertura_id")
+  fecha          DateTime    @db.Date
+  horaInicio     String      @map("hora_inicio") @db.VarChar(5)
+  horaFin        String      @map("hora_fin") @db.VarChar(5)
+  estado         EstadoTurno @default(CONFIRMADO)
+  motivoConsulta String?     @map("motivo_consulta") @db.VarChar(255)
+  creadoEn       DateTime    @default(now()) @map("creado_en")
+
+  paciente       Paciente    @relation(fields: [pacienteId], references: [id])
+  medico         Medico      @relation(fields: [medicoId], references: [id])
+  cobertura      Cobertura?  @relation(fields: [coberturaId], references: [id])
+
+  // Restricción RN-01: Evita colisiones de turnos para el mismo profesional
+  @@unique([medicoId, fecha, horaInicio], name: "medico_fecha_hora_unica")
+  @@map("turnos")
+}
