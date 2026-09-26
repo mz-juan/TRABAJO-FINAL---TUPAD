@@ -96,19 +96,53 @@ El stack tecnologico propuesto son herramientas vistas durante la cursada de la 
 
 ## Desarrollo por Etapas
 
-### Etapa 1: Núcleo Operativo y Reserva Online (MVP)
-- **Módulo de autenticación:**
-  - Registro e inicio de sesión.
-  - Control de acceso basado en roles
-  - Persistencia de la sesión.
-- **Módulo de Pacientes:**
-  - Búsqueda de turnos filtrada por especialidad, profesional, cobertura y fecha.
-  - Reserva en horatios disponibles.
-  - Panel de gestión de turnos propios.
-  - Confirmación automática por correo electrónico.
-- **Módulo de Profesionales Médicos:**
-  - Visualización de agenda diaria y semanal.
-  - Configuración de disponibilidad horaria y bloqueo de fechas.
-- **Módulo de Administración y Recepción:**
-  - ABM (CRUD) de médicos, especialidades, consultorios y coberturas.
-  - Mesa de entrada para registro de pacientes.
+### Etapa 1: Núcleo Operativo, Autenticación y Reserva Online 
+
+* **Módulo de Autenticación y Seguridad (Auth):**
+  * Registro de pacientes y acceso mediante credenciales (email y contraseña).
+  * Control de acceso basado en roles para perfiles: `PACIENTE`, `MEDICO` y `ADMIN`.
+  * Protección de rutas y persistencia de sesión en el frontend con `AuthContext` y `ProtectedRoute`.
+
+* **Módulo de Pacientes (Autogestión):**
+  * Búsqueda parametrizada cruzando especialidad, profesional, fecha y cobertura médica habilitada.
+  * Selección y reserva de franjas horarias libres calculadas en tiempo real.
+  * Panel "Mis Turnos": consulta de citas agendadas e historial, cancelación autónoma con liberación inmediata de cupo.
+ 
+
+* **Módulo de Profesionales Médicos:**
+  * Visualización de agenda de turnos agendados.
+  * Configuración de rutina horaria semanal: definición de días laborales, horarios de atención y duración estándar por consulta (ej. 15, 30, 45 min).
+
+* **Módulo de Excepciones y Bloqueos de Agenda:**
+  * Registro y gestión de ausencias programadas o imprevistas (licencias, feriados, vacaciones).
+  * Exclusión automática de franjas horarias bloqueadas en el motor de búsqueda y reserva.
+
+* **Módulo de Obras Sociales y Coberturas:**
+  * Catálogo centralizado de obras sociales, prepagas y modalidad Particular.
+
+
+* **Módulo de Administración y Mesa de Entrada:**
+  * ABM (CRUD) integral de médicos, especialidades, consultorios físicos y coberturas.
+  * Mesa de entrada: búsqueda de pacientes por DNI y asignación de turnos presenciales o telefónicos.
+  * Panel básico con métricas de ocupación y turnos asignados por especialidad.
+
+---
+
+### Etapa 2: Recordatorios, Notificaciones y Optimización Operativa 
+
+* **Sistema de Recordatorios y Notificaciones:**
+  * Envío programado de alertas previas al turno por correo electrónico.
+  * Notificaciones de cancelación o reprogramación de turnos emitidas al instante para el paciente o el médico.
+
+
+---
+
+### Etapa 3: Chatbot y Canales Conversacionales 
+
+* **Chatbot Asistencial para Pacientes:**
+  * Asistente virtual interactivo integrado en el frontend (widget web) para resolver dudas frecuentes sobre horarios de atención, especialidades y requisitos de coberturas.
+  * Consulta guiada de disponibilidad de turnos en lenguaje natural con derivación al flujo de reserva.
+
+## Documentación
+
+La documentacion se encuentra disponible en docs/
