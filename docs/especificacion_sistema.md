@@ -61,4 +61,38 @@ El sistema vincula de manera coordinada a tres actores principales:
 
 ---
 
+## 4. Definición Funcional de Módulos
 
+### 4.1. Módulo de Autenticación y Autorización
+* **Propósito:** Control de identidad y privilegios del sistema.
+* **Componentes Backend:** `auth.controller.ts`, `auth.service.ts`, `auth.middleware.ts`.
+* **Componentes Frontend:** `AuthContext.jsx`, `ProtectedRoute.jsx`, `views/Login/Login.jsx`.
+* **Funcionalidad:** Cifrado, validación de credenciales, generación de JWT y filtrado de rutas protegidas según rol (`PACIENTE`, `MEDICO`, `ADMIN`).
+
+### 4.2. Módulo de Pacientes y Autogestión
+* **Propósito:** Acceso del paciente a búsqueda, reserva y gestión de sus citas médicas.
+* **Componentes Backend:** `turno.controller.ts`, `turno.service.ts`.
+* **Componentes Frontend:** `views/ReservaTurno/ReservaTurno.jsx`, `views/MisTurnos/MisTurnos.jsx`, `components/Calendar/Calendar.jsx`, `components/ModalTurno/ModalTurno.jsx`.
+* **Funcionalidad:** Búsqueda filtrada por especialidad y cobertura. Selección de horarios disponibles. Listado personal de citas activas y pasadas con opción de cancelación y generación de comprobante en PDF.
+
+### 4.3. Módulo de Profesionales Médicos
+* **Propósito:** Organización y consulta de la agenda médica.
+* **Componentes Backend:** `medico.controller.ts`, `medico.service.ts`.
+* **Componentes Frontend:** `views/PanelMedico/PanelMedico.jsx`.
+* **Funcionalidad:** Visualización de la agenda de turnos confirmados para el día y la semana.
+
+### 4.4. Módulo de Excepciones y Bloqueos de Agenda
+* **Propósito:** Gestionar la indisponibilidad horaria por motivos extraordinarios (licencias, feriados, vacaciones, etc.).
+* **Componentes Backend:** `bloqueo.controller.ts`, `bloqueo.service.ts`, `bloqueo.routes.ts`.
+* **Funcionalidad:** Alta y consulta de bloqueos temporales por rango de fecha/hora. Descuento automático de estos intervalos durante el cálculo de disponibilidad de turnos.
+
+### 4.5. Módulo de Obras Sociales y Coberturas
+* **Propósito:** Administrar el padrón de mutuales y su vinculación personalizada con los especialistas.
+* **Componentes Backend:** `cobertura.controller.ts`, `cobertura.service.ts`, `cobertura.routes.ts`.
+* **Funcionalidad:** CRUD de coberturas y asignación a médicos mediante la entidad intermedia `medicos_coberturas`, soportando valores de arancel o copago.
+
+### 4.6. Módulo de Administración y Mesa de Entrada
+* **Propósito:** Operación de la gestión administrativa del sistema.
+* **Componentes Backend:** Endpoints administrativos con verificación de rol `ADMIN`.
+* **Componentes Frontend:** `views/Admin/AdminDashboard.jsx`.
+* **Funcionalidad:** Carga y edición de médicos, especialidades y consultorios. Mesa de entrada con buscador por DNI para agendar turnos de pacientes en ventanilla. Métricas básicas de turnos asignados por especialidad.
