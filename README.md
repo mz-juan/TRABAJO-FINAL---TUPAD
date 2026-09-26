@@ -2,7 +2,7 @@
 
 ## Integrante
 - Grupo: 210
-- Alumno: Falacios Fernando Agustin
+- Alumno: Palacios Fernando Agustin
 - Tutor a cargo: Gerardo Adrian Herrera
 
 ## Introducción
