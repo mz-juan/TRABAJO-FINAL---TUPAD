@@ -20,6 +20,27 @@ classDiagram
         <<enumeration>>
         CONFIRMADO
         CANCELADO
+        REPROGRAMADO
+        AUSENTE
+        ATENDIDO
+    }
+
+    class AccionHistorialTurno {
+        <<enumeration>>
+        ALTA
+        CANCELACION
+        REPROGRAMACION
+        CAMBIO_ESTADO
+        MODIFICACION
+    }
+
+    class AccionAuditoria {
+        <<enumeration>>
+        ALTA
+        MODIFICACION
+        BAJA_LOGICA
+        ASIGNACION
+        DESASIGNACION
     }
 
     %% ──────────────────────────────────────────────
@@ -52,7 +73,22 @@ classDiagram
         +String apellido
         +String matricula
         +Int especialidadId
-        +String? consultorio
+    }
+
+    class Consultorio {
+        +Int id
+        +String codigo
+        +String nombre
+        +String? ubicacion
+        +Boolean activo
+        +DateTime creadoEn
+    }
+
+    class MedicoConsultorio {
+        +Int medicoId
+        +Int consultorioId
+        +Boolean activo
+        +DateTime asignadoEn
     }
 
     class Especialidad {
@@ -76,8 +112,8 @@ classDiagram
         +Int id
         +Int medicoId
         +Int diaSemana
-        +String horaDesde
-        +String horaHasta
+        +Int horaDesdeMinutos
+        +Int horaHastaMinutos
         +Int duracionTurnoMinutos
     }
 
@@ -94,12 +130,41 @@ classDiagram
         +Int id
         +Int pacienteId
         +Int medicoId
+        +Int consultorioId
         +Int? coberturaId
         +DateTime fecha
-        +String horaInicio
-        +String horaFin
+        +Int horaInicioMinutos
+        +Int horaFinMinutos
         +EstadoTurno estado
         +String? motivoConsulta
+        +DateTime creadoEn
+        +Int? turnoAnteriorId
+    }
+
+    class HistorialTurno {
+        +Int id
+        +Int turnoId
+        +Int? actorUsuarioId
+        +AccionHistorialTurno accion
+        +EstadoTurno? estadoAnterior
+        +EstadoTurno? estadoNuevo
+        +Json? valoresAnteriores
+        +Json? valoresNuevos
+        +String? origen
+        +String? motivo
+        +DateTime creadoEn
+    }
+
+    class AuditoriaOperacion {
+        +Int id
+        +Int? actorUsuarioId
+        +String entidad
+        +String entidadId
+        +AccionAuditoria accion
+        +Json? valoresAnteriores
+        +Json? valoresNuevos
+        +String? origen
+        +String? motivo
         +DateTime creadoEn
     }
 
@@ -108,6 +173,8 @@ classDiagram
     %% ──────────────────────────────────────────────
     Usuario "1" -- "0..1" Paciente : tiene
     Usuario "1" -- "0..1" Medico : tiene
+    Usuario "0..1" -- "0..*" HistorialTurno : registra
+    Usuario "0..1" -- "0..*" AuditoriaOperacion : ejecuta
     Usuario ..> Rol : usa
 
     Paciente "0..*" --> "0..1" Cobertura : pertenece a
@@ -118,6 +185,9 @@ classDiagram
     Medico "1" -- "0..*" BloqueoAgenda : registra
     Medico "1" -- "0..*" Turno : atiende
     Medico "1" -- "0..*" MedicoCobertura : acepta
+    Medico "1" -- "0..*" MedicoConsultorio : asignado
+    Consultorio "1" -- "0..*" MedicoConsultorio : disponible para
+    Consultorio "1" -- "0..*" Turno : aloja
 
     Cobertura "1" -- "0..*" MedicoCobertura : vinculada a
     Cobertura "1" -- "0..*" Turno : cubre
@@ -128,5 +198,10 @@ classDiagram
     Turno ..> EstadoTurno : usa
     Turno --> Paciente : pacienteId
     Turno --> Medico : medicoId
+    Turno --> Consultorio : consultorioId
     Turno --> Cobertura : coberturaId
+    Turno "0..1" --> "0..1" Turno : reprograma
+    Turno "1" -- "0..*" HistorialTurno : conserva eventos
+    Turno ..> AccionHistorialTurno : registra acciones
+    AuditoriaOperacion ..> AccionAuditoria : registra acciones
 ```
