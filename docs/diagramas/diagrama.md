@@ -111,6 +111,7 @@ classDiagram
     class HorarioAtencion {
         +Int id
         +Int medicoId
+        +Int consultorioId
         +Int diaSemana
         +Int horaDesdeMinutos
         +Int horaHastaMinutos
@@ -182,6 +183,7 @@ classDiagram
 
     Medico "0..*" --> "1" Especialidad : ejerce
     Medico "1" -- "0..*" HorarioAtencion : configura
+    Consultorio "1" -- "0..*" HorarioAtencion : agenda en
     Medico "1" -- "0..*" BloqueoAgenda : registra
     Medico "1" -- "0..*" Turno : atiende
     Medico "1" -- "0..*" MedicoCobertura : acepta

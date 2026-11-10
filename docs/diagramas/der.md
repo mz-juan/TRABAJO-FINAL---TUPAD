@@ -70,6 +70,7 @@ erDiagram
     HORARIOS_ATENCION {
         int id PK
         int medico_id FK
+        int consultorio_id FK
         int dia_semana
         int hora_desde_minutos
         int hora_hasta_minutos
@@ -138,6 +139,7 @@ erDiagram
     COBERTURAS ||--o{ MEDICOS_COBERTURAS : es_aceptada
 
     MEDICOS ||--o{ HORARIOS_ATENCION : define
+    CONSULTORIOS ||--o{ HORARIOS_ATENCION : agenda_en
     MEDICOS ||--o{ BLOQUEOS_AGENDA : registra
 
     PACIENTES ||--o{ TURNOS : reserva

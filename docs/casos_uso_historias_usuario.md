@@ -47,7 +47,7 @@ Los casos describen el comportamiento funcional esperado de la aplicación. Son 
 
 **Actor principal:** Paciente. **Requerimientos:** RF-06, RF-07, RF-15, RF-16, RF-17.
 
-**Precondiciones:** Sesión de paciente válida; franja disponible; se cumplen anticipación mínima y límite de turnos activos.
+**Precondiciones:** Sesión de paciente válida; franja disponible; se cumplen anticipación mínima (RN-04) y el paciente no mantiene otro turno en estado `CONFIRMADO` para la especialidad del profesional seleccionado (RN-06).
 
 **Flujo principal:**
 1. El paciente selecciona una franja y confirma cobertura y datos de la solicitud.
@@ -64,7 +64,7 @@ Los casos describen el comportamiento funcional esperado de la aplicación. Son 
 
 **Actor principal:** Administrador/Recepción. **Requerimientos:** RF-07, RF-13, RF-16, RF-18.
 
-**Precondiciones:** Usuario con rol autorizado; paciente identificado por DNI o registrado según el procedimiento institucional.
+**Precondiciones:** Usuario con rol autorizado; paciente identificado por DNI o registrado según el procedimiento institucional; el paciente no mantiene otro turno en estado `CONFIRMADO` para la especialidad del profesional seleccionado (RN-06).
 
 **Flujo principal:**
 1. Recepción busca al paciente por DNI.
@@ -152,7 +152,7 @@ Los criterios de aceptación son verificables y complementan las reglas de negoc
 | **HU-01** | Como paciente, quiero crear una cuenta con mis datos para reservar turnos. | RF-01 | Email y DNI duplicados se rechazan; la contraseña queda protegida; el perfil se crea asociado al usuario. |
 | **HU-02** | Como usuario, quiero iniciar sesión y acceder según mi rol para usar solo funciones autorizadas. | RF-02, RF-03 | Credenciales inválidas no crean sesión; rutas privadas requieren autenticación; un rol no accede a funciones ajenas. |
 | **HU-03** | Como paciente, quiero filtrar profesionales y horarios por especialidad, cobertura y fecha para encontrar una opción adecuada. | RF-04, RF-05, RF-06 | Solo se ofrecen coberturas compatibles; se excluyen bloqueos y turnos ocupados; si no hay resultados se informa claramente. |
-| **HU-04** | Como paciente, quiero reservar una franja disponible para confirmar mi consulta. | RF-07 | Se revalida disponibilidad al confirmar; turnos superpuestos para médico o consultorio no se aceptan; se respetan anticipación y límite de turnos activos. |
+| **HU-04** | Como paciente, quiero reservar una franja disponible para confirmar mi consulta. | RF-07 | Se revalida disponibilidad al confirmar; turnos superpuestos para médico o consultorio no se aceptan; se respeta la anticipación mínima (RN-04); si el paciente ya tiene un turno `CONFIRMADO` para la misma especialidad, se rechaza la reserva indicando la restricción (RN-06). |
 | **HU-05** | Como paciente, quiero cancelar un turno permitido para liberar el horario si ya no puedo asistir. | RF-08 | Se valida la ventana de cancelación; cancelar conserva el turno y libera disponibilidad en una operación atómica; queda un evento de auditoría. |
 | **HU-06** | Como paciente o recepcionista autorizado, quiero reprogramar un turno sin perder su historial. | RF-16, RF-17 | Si el destino no está libre, el turno original no cambia; si se confirma, el anterior queda `REPROGRAMADO` y se crea su sucesor en una transacción. |
 | **HU-07** | Como paciente, quiero consultar mis turnos actuales y anteriores para conocer su estado. | RF-08, RF-16, RF-17 | Se muestran estados y consultorio; turnos cancelados y reprogramados siguen disponibles en el historial. |
@@ -164,3 +164,7 @@ Los criterios de aceptación son verificables y complementan las reglas de negoc
 | **HU-13** | Como médico o recepcionista autorizado, quiero registrar si el paciente asistió o fue atendido para cerrar la agenda. | RF-09, RF-17 | Solo se modifican turnos elegibles; `ATENDIDO` y `AUSENTE` quedan registrados y no vuelven a ocupar disponibilidad futura. |
 | **HU-14** | Como paciente, quiero recibir una confirmación después de reservar para tener constancia de la cita. | RF-15 | El aviso solo se solicita después de confirmar la transacción; una reserva fallida no genera confirmación. |
 | **HU-15** | Como administrador, quiero auditar cambios de turnos y catálogos para conocer quién realizó cada operación. | RF-16, RF-18 | Los eventos registran actor cuando existe, fecha, acción y entidad; no contienen contraseñas, tokens ni secretos. |
+| **HU-16** | Como paciente sin obra social, quiero poder reservar un turno como particular para acceder a la atención médica. | RF-19 | Si el paciente no tiene cobertura o su cobertura no tiene convenio con el profesional, se ofrece reservar como «Particular»; el turno se crea con `cobertura_id = NULL`; se muestra un aviso de atención sin cobertura antes de confirmar. |
+| **HU-17** | Como paciente, quiero descargar un comprobante PDF de mi turno para tener constancia impresa o digital. | RF-20 | El PDF incluye datos completos del turno; se genera bajo demanda; está disponible tanto en "Mis Turnos" como desde mesa de entrada. |
+| **HU-18** | Como administrador, quiero consultar métricas de ocupación para tomar decisiones operativas. | RF-21 | Muestra turnos por estado, por especialidad y por consultorio; permite filtrar por rango de fechas; calcula tasa de ausentismo. |
+| **HU-19** | Como paciente, quiero recibir un recordatorio por email antes de mi turno para no olvidar la cita. | RF-22 | El recordatorio solo se envía para turnos `CONFIRMADO`; se envía dentro de la ventana configurada; no se envía si el turno fue cancelado o reprogramado. |

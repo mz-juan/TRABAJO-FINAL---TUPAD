@@ -35,6 +35,10 @@ El sistema vincula de manera coordinada a tres actores principales:
 | **RF-16** | Historial y Auditoría de Turnos | Registrar cada alta y cambio de un turno con fecha, actor, origen, motivo y valores anteriores/nuevos para reconstruir su evolución. |
 | **RF-17** | Ciclo de Vida del Turno | Gestionar los estados `CONFIRMADO`, `CANCELADO`, `REPROGRAMADO`, `AUSENTE` y `ATENDIDO`, aplicando transiciones permitidas y conservando los registros históricos. |
 | **RF-18** | Auditoría Administrativa | Registrar las altas, modificaciones, bajas lógicas y asignaciones administrativas con actor, entidad afectada, fecha, origen y valores anteriores/nuevos. |
+| **RF-19** | Reserva como Particular | Cuando la cobertura del paciente no es aceptada por el profesional o el paciente no tiene cobertura, el sistema debe permitir la reserva bajo modalidad «Particular» (`cobertura_id = NULL`), informando al paciente que la atención será sin cobertura antes de la confirmación. |
+| **RF-20** | Generación de Comprobante PDF | El sistema debe generar un comprobante en formato PDF con los datos del turno (paciente, profesional, especialidad, fecha, hora, consultorio y cobertura/particular) disponible para descarga desde el panel del paciente y desde la mesa de entrada. |
+| **RF-21** | Métricas y Reportes Administrativos | El panel de administración debe ofrecer métricas de ocupación por especialidad, por consultorio y por estado de turno, con filtros por rango de fechas. Incluye al menos: cantidad de turnos por estado, tasa de ausentismo y porcentaje de ocupación por franja horaria. |
+| **RF-22** | Recordatorios Previos al Turno | El sistema debe enviar un recordatorio por correo electrónico al paciente un tiempo configurable antes de la cita (por defecto 24 h). Solo se envía para turnos en estado `CONFIRMADO` al momento del despacho. *(Etapa 2 según planificación.)* |
 
 ---
 
@@ -65,6 +69,8 @@ El sistema vincula de manera coordinada a tres actores principales:
 * **RN-09 (Ocupación de Turnos):** Solo `CONFIRMADO` ocupa disponibilidad futura. `CANCELADO` y `REPROGRAMADO` liberan el horario; `ATENDIDO` y `AUSENTE` son resultados de turnos cuya franja ya transcurrió. La regla se aplica igual a la agenda del médico y a la del consultorio.
 * **RN-10 (Formato de Horarios):** Los horarios se almacenan como minutos desde medianoche, entre 0 y 1439. El fin debe ser mayor que el inicio y la duración debe ser múltiplo de la unidad operativa definida. La API puede recibir y devolver `HH:mm`.
 * **RN-11 (Auditoría Administrativa):** Las operaciones de administración sobre médicos, consultorios, especialidades, coberturas y asignaciones registran actor, acción y datos afectados. Los eventos no se editan ni eliminan; los snapshots excluyen credenciales, tokens y otros secretos.
+* **RN-12 (Atención Particular / Sin Cobertura):** Cuando un paciente no posee cobertura registrada (`pacientes.cobertura_id IS NULL`) o cuando la cobertura del paciente no tiene convenio activo con el profesional seleccionado (`medicos_coberturas`), el turno se reserva bajo la modalidad «Particular». En el modelo de datos, esto se representa con `turnos.cobertura_id = NULL`. El arancel aplicable se define en la configuración del profesional o se informa al paciente antes de confirmar la reserva. La búsqueda de disponibilidad no filtra por cobertura cuando el paciente selecciona «Particular» como modalidad: se muestran todos los profesionales de la especialidad elegida, independientemente de sus convenios.
+* **RN-13 (Horario Vinculado a Consultorio):** Cada registro de `horarios_atencion` define la rutina de un médico **en un consultorio específico**. Un profesional que atiende en distintos consultorios tendrá filas distintas, cada una con su combinación (`medico_id`, `consultorio_id`, `dia_semana`). El motor de disponibilidad genera franjas a partir de estas filas, asignando el consultorio correspondiente al turno resultante. La restricción de unicidad `(medico_id, consultorio_id, dia_semana)` impide definir dos bloques horarios solapados para la misma combinación.
 
 ---
 
@@ -228,6 +234,7 @@ model Consultorio {
   creadoEn  DateTime  @default(now()) @map("creado_en")
 
   medicos   MedicoConsultorio[]
+  horarios  HorarioAtencion[]
   turnos    Turno[]
 
   @@map("consultorios")
@@ -259,15 +266,18 @@ model MedicoCobertura {
 }
 
 model HorarioAtencion {
-  id                   Int      @id @default(autoincrement())
-  medicoId             Int      @map("medico_id")
-  diaSemana            Int      @map("dia_semana") // 1=Lunes ... 6=Sábado
-  horaDesdeMinutos     Int      @map("hora_desde_minutos") // Minutos desde medianoche
-  horaHastaMinutos     Int      @map("hora_hasta_minutos")
-  duracionTurnoMinutos Int      @default(30) @map("duracion_turno_minutos")
+  id                   Int          @id @default(autoincrement())
+  medicoId             Int          @map("medico_id")
+  consultorioId        Int          @map("consultorio_id")
+  diaSemana            Int          @map("dia_semana") // 1=Lunes ... 6=Sábado
+  horaDesdeMinutos     Int          @map("hora_desde_minutos") // Minutos desde medianoche
+  horaHastaMinutos     Int          @map("hora_hasta_minutos")
+  duracionTurnoMinutos Int          @default(30) @map("duracion_turno_minutos")
 
-  medico               Medico   @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  medico               Medico       @relation(fields: [medicoId], references: [id], onDelete: Cascade)
+  consultorio          Consultorio  @relation(fields: [consultorioId], references: [id], onDelete: Restrict)
 
+  @@unique([medicoId, consultorioId, diaSemana])
   @@map("horarios_atencion")
 }
 
@@ -352,8 +362,41 @@ model HistorialTurno {
 }
 ```
 
+> **Convención «Particular»:** `turnos.cobertura_id = NULL` indica que la cita se realizó sin cobertura. Análogamente, `pacientes.cobertura_id = NULL` indica que el paciente no tiene obra social/prepaga registrada. Ambos campos son nullable por diseño para soportar esta modalidad sin necesidad de un registro especial en la tabla `coberturas`.
+
 ## 6. Casos de Uso, Historias de Usuario y DER
 
 Los escenarios funcionales, actores, flujos alternativos e historias con criterios de aceptación se detallan en [Casos de Uso e Historias de Usuario](casos_uso_historias_usuario.md). El diagrama entidad-relación formal con claves y cardinalidades está disponible en [DER](diagramas/der.md); el [diagrama de clases](diagramas/diagrama.md) y los [flujos críticos](diagramas/flujos_criticos.md) complementan esa vista.
 
 Estos artefactos describen el modelo objetivo y no implican que el backend o la base de datos ya estén implementados.
+
+---
+
+## 7. Matriz de Trazabilidad
+
+La siguiente matriz vincula cada Requerimiento Funcional con sus Casos de Uso, Historias de Usuario, Reglas de Negocio aplicables y Entidades del modelo de datos involucradas.
+
+| RF | Descripción | Caso(s) de Uso | Historia(s) de Usuario | Regla(s) de Negocio | Entidad(es) del Modelo |
+|:---|:---|:---|:---|:---|:---|
+| RF-01 | Registro de Pacientes | UC-01 | HU-01 | — | `Usuario`, `Paciente`, `Cobertura` |
+| RF-02 | Autenticación y Autorización | UC-01 | HU-02 | — | `Usuario` |
+| RF-03 | Protección y Persistencia | UC-01 | HU-02 | — | `Usuario` |
+| RF-04 | Catálogo de Coberturas y Especialidades | UC-02 | HU-03, HU-11 | RN-03 | `Cobertura`, `Especialidad`, `MedicoCobertura` |
+| RF-05 | Búsqueda Parametrizada de Turnos | UC-02 | HU-03 | RN-03, RN-12 | `Medico`, `Especialidad`, `HorarioAtencion`, `Cobertura` |
+| RF-06 | Cálculo de Disponibilidad | UC-02, UC-03, UC-04 | HU-03, HU-04 | RN-01, RN-02, RN-09, RN-13 | `HorarioAtencion`, `BloqueoAgenda`, `Turno`, `Consultorio` |
+| RF-07 | Reserva Efectiva de Cita | UC-03, UC-04, UC-06 | HU-04, HU-06, HU-12 | RN-01, RN-03, RN-04, RN-06, RN-07, RN-12 | `Turno`, `HistorialTurno`, `Medico`, `Consultorio`, `Cobertura` |
+| RF-08 | Cancelación de Turnos | UC-05 | HU-05, HU-07 | RN-05, RN-07, RN-08, RN-09 | `Turno`, `HistorialTurno` |
+| RF-09 | Visualización de Agenda Médica | UC-07 | HU-08, HU-13 | — | `Turno`, `Medico`, `Consultorio` |
+| RF-10 | Configuración de Rutina Horaria | UC-08 | HU-09 | RN-10, RN-13 | `HorarioAtencion`, `Consultorio` |
+| RF-11 | Registro de Bloqueos y Licencias | UC-08 | HU-09 | RN-02 | `BloqueoAgenda` |
+| RF-12 | Matriz Médico-Cobertura | UC-08 | HU-11 | RN-03 | `MedicoCobertura`, `Cobertura`, `Medico` |
+| RF-13 | Mesa de Entrada Presencial | UC-04 | HU-12 | RN-01, RN-06 | `Turno`, `Paciente`, `HistorialTurno`, `AuditoriaOperacion` |
+| RF-14 | ABM de Profesionales y Consultorios | UC-08 | HU-10 | RN-11 | `Medico`, `Consultorio`, `MedicoConsultorio`, `AuditoriaOperacion` |
+| RF-15 | Notificación por Correo Electrónico | UC-03 | HU-14 | — | `Turno` (datos para el email) |
+| RF-16 | Historial y Auditoría de Turnos | UC-03 a UC-07 | HU-06, HU-07, HU-15 | RN-07, RN-11 | `HistorialTurno` |
+| RF-17 | Ciclo de Vida del Turno | UC-03 a UC-07 | HU-04 a HU-07, HU-13 | RN-07, RN-08, RN-09 | `Turno`, `EstadoTurno` |
+| RF-18 | Auditoría Administrativa | UC-04, UC-08 | HU-15 | RN-11 | `AuditoriaOperacion` |
+| RF-19 | Reserva como Particular | UC-02, UC-03, UC-04 | HU-16 | RN-03, RN-12 | `Turno` (`cobertura_id = NULL`), `Paciente`, `MedicoCobertura` |
+| RF-20 | Generación de Comprobante PDF | UC-03, UC-04, UC-05 | HU-17 | — | `Turno`, `Paciente`, `Medico`, `Consultorio`, `Cobertura` |
+| RF-21 | Métricas y Reportes Administrativos | UC-08 | HU-18 | — | `Turno`, `Especialidad`, `Consultorio` |
+| RF-22 | Recordatorios Previos al Turno | — *(Etapa 2)* | HU-19 | — | `Turno`, `Paciente` |

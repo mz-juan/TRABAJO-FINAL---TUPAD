@@ -13,7 +13,12 @@ sequenceDiagram
     API->>DB: BEGIN
     API->>DB: Bloquear médico y consultorio en orden estable
     API->>DB: Validar asignación, bloqueos y solapamientos confirmados
-    alt Médico o consultorio ocupado
+    API->>DB: Verificar RN-06 — turno activo del paciente en la especialidad
+    alt Paciente ya tiene turno CONFIRMADO en la especialidad
+        DB-->>API: Límite de citas activas alcanzado
+        API->>DB: ROLLBACK
+        API-->>Solicitante: Rechazar — ya posee turno activo en esta especialidad
+    else Médico o consultorio ocupado
         DB-->>API: Recurso no disponible
         API->>DB: ROLLBACK
         API-->>Solicitante: Conflicto de disponibilidad
