@@ -134,32 +134,32 @@ El stack tecnologico propuesto son herramientas vistas durante la cursada de la 
 
 * **Sistema de Recordatorios y Notificaciones:**
   * Envío programado de alertas previas al turno por correo electrónico.
-  * Notificaciones de cancelación o reprogramación de turnos emitidas al instante para el paciente o el médico.
+  * Notificaciones por correo electrónico de cancelación o reprogramación de turnos emitidas al instante para el paciente o el médico.
 
 
 ---
 
-### Etapa 3: Chatbot y Canales Conversacionales 
+## Escalabilidad y funcionalidades futuras
 
-* **Chatbot Asistencial para Pacientes:**
-  * Asistente virtual interactivo integrado en el frontend (widget web) para resolver dudas frecuentes sobre horarios de atención, especialidades y requisitos de coberturas.
-  * Consulta guiada de disponibilidad de turnos en lenguaje natural con derivación al flujo de reserva.
+Las siguientes propuestas representan funcionalidades futuras para la evolución del sistema.
 
-## Documentación
+* **Chatbot asistencial para pacientes:** Asistente virtual integrado en el frontend para responder consultas frecuentes sobre horarios de atención, especialidades y requisitos de coberturas.
+  * Consulta guiada de disponibilidad en lenguaje natural, con derivación al flujo habitual de reserva.
+* **Notificaciones, recordatorios:** Incorporación de mensajería instantánea (WhatsApp Business API) y notificaciones push para recordatorios automáticos.
+* **Lista de espera inteligente:** sistema de lista de espera que reasigne de forma ágil los cupos liberados por cancelaciones de último momento.
+* **Integración de documentos administrativos:** Carga previa de órdenes médicas digitales para agilizar la validación administrativa en ventanilla.
+* **Historia Clínica Electrónica y documentación del paciente:** Registro estructurado de evoluciones médicas, diagnósticos, antecedentes, y prescripciones asociados a cada consulta atendida.
+* **Escalabilidad de la infraestructura:** incorporar monitoreo, registros centralizados y estrategias de respaldo; optimizar consultas y recursos a medida que aumente el volumen de usuarios y turnos.
+* **Seguridad avanzada y auditoría:** Implementación de autenticación en dos pasos (2FA) para cuentas administrativas y bitácoras de auditoría sobre modificaciones críticas de agendas y turnos.
+* **Reportes operativos:** ampliar las métricas para analizar demanda, ocupación y ausentismo, con filtros y exportación de resultados.
 
-### Configuración institucional
+## Utilización de inteligencia artificial
 
-La configuración de identidad y contenido institucional del frontend se centraliza en
-[clinicaConfig.js](frontend/src/config/clinicaConfig.js), exportada como `clinicaConfig`.
-Permite ajustar el nombre y nombre corto de la institución, el eslogan, el subtítulo,
-el logotipo, los datos de contacto y ubicación, los textos principales de la página de
-inicio, los pasos de la guía «¿Cómo funciona?» y los parámetros descriptivos de atención
-particular.
+Se utilizó inteligencia artificial generativa como herramienta de apoyo durante el desarrollo del proyecto, principalmente para explorar alternativas de solución, resolver dudas técnicas y mejorar la redacción y organización de la documentación. Su uso permitió acelerar la búsqueda de ideas y contar con sugerencias para analizar e iterar sobre el sistema.
 
-La navegación y la página de inicio consumen esta configuración para mostrar la marca,
-el contenido principal y parte de la información de contacto. La configuración de atención particular, no reemplaza las reglas de cobertura implementadas en el sistema. Estos valores deben verificarse
-y reemplazarse por datos institucionales.
+Los modelos utilizados fueron **Claude Sonnet 5.5** y **Gemini 4 Argon**.
 
-El detalle de las propiedades y su alcance se encuentra en la
-[especificación del sistema](docs/especificacion_sistema.md#47-configuracion-institucional-del-frontend).
-El resto de la documentación está disponible en [docs/](docs/).
+La IA se empleó como complemento del trabajo, no como sustituto de las decisiones del equipo: las propuestas se revisaron y ajustaron según los requerimientos del proyecto. Entre las ventajas obtenidas se destacan el ahorro de tiempo en tareas de investigación, redacción y escritura de código, la generación rápida de alternativas y una mayor facilidad para identificar posibles mejoras.
+
+
+

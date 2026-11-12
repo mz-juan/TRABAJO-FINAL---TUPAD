@@ -112,11 +112,18 @@ El sistema vincula de manera coordinada a tres actores principales:
 
 ### 4.7. Configuración institucional del frontend
 
-La identidad visual y parte del contenido institucional se centralizan en
-[`frontend/src/config/clinicaConfig.js`](../frontend/src/config/clinicaConfig.js), que
-exporta el objeto `clinicaConfig` . Se consume en la barra de navegación y en la página de inicio. Es configuración de presentación:
-no se persiste en la base de datos, no configura el backend y no cambia por sí sola las
-reglas de reservas, coberturas ni disponibilidad.
+
+La configuración de identidad y contenido institucional del frontend se centraliza en
+[clinicaConfig.js](frontend/src/config/clinicaConfig.js), exportada como `clinicaConfig`.
+Permite ajustar el nombre y nombre corto de la institución, el eslogan, el subtítulo,
+el logotipo, los datos de contacto y ubicación, los textos principales de la página de
+inicio, los pasos de la guía «¿Cómo funciona?» y los parámetros descriptivos de atención
+particular.
+
+La navegación y la página de inicio consumen esta configuración para mostrar la marca,
+el contenido principal y parte de la información de contacto. La configuración de atención particular, no reemplaza las reglas de cobertura implementadas en el sistema. Estos valores deben verificarse
+y reemplazarse por datos institucionales.
+
 
 | Propiedad | Información configurable |
 | :--- | :--- |
