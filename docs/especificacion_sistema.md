@@ -110,6 +110,28 @@ El sistema vincula de manera coordinada a tres actores principales:
 * **Componentes Frontend:** `views/Admin/AdminDashboard.jsx`.
 * **Funcionalidad:** ABM de médicos, especialidades y consultorios; asignación de médicos a consultorios. Mesa de entrada con buscador por DNI y registro del actor/origen de la operación. Métricas básicas por especialidad, consultorio y estado.
 
+### 4.7. Configuración institucional del frontend
+
+La identidad visual y parte del contenido institucional se centralizan en
+[`frontend/src/config/clinicaConfig.js`](../frontend/src/config/clinicaConfig.js), que
+exporta el objeto `clinicaConfig` . Se consume en la barra de navegación y en la página de inicio. Es configuración de presentación:
+no se persiste en la base de datos, no configura el backend y no cambia por sí sola las
+reglas de reservas, coberturas ni disponibilidad.
+
+| Propiedad | Información configurable |
+| :--- | :--- |
+| `nombre`, `nombreCorto` | Nombre institucional completo y abreviatura. |
+| `slogan`, `subtitulo` | Frase de marca y texto institucional complementario. |
+| `logo` | Tipo de logotipo (`icon` o `image`), texto del ícono y ruta de imagen. |
+| `contacto` | Dirección, ciudad, teléfono principal y de guardia, email, enlace de mapas y horarios de semana, sábado y guardia. |
+| `hero` | Título, subtítulo y etiquetas de los botones principales de inicio. |
+| `comoFunciona` | Lista ordenable de pasos informativos, con título, descripción e identificador de ícono. |
+| `atencionParticular` | Indicadores y textos descriptivos para la modalidad particular. No habilita ni implementa por sí mismo esa modalidad. |
+
+
+Los valores que contiene el archivo son ilustrativos —incluidos los datos de contacto—,
+no datos institucionales verificados.
+
 
 ## 5. Modelo de datos objetivo (`backend/prisma/schema.prisma`)
 

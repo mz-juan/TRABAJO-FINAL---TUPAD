@@ -38,6 +38,8 @@ gestion-turnos/
 ├── frontend/                     # Aplicación React + Vite con CSS
 │   ├── src/
 │   │   ├── assets/               # Imágenes, logos e iconos
+│   │   ├── config/
+│   │   │   └── clinicaConfig.js  # Identidad y textos institucionales del frontend
 │   │   ├── components/           # Componentes reutilizables con sus estilos
 │   │   │   ├── Navbar/
 │   │   │   │   ├── Navbar.jsx
@@ -145,4 +147,19 @@ El stack tecnologico propuesto son herramientas vistas durante la cursada de la 
 
 ## Documentación
 
-La documentacion se encuentra disponible en docs/
+### Configuración institucional
+
+La configuración de identidad y contenido institucional del frontend se centraliza en
+[clinicaConfig.js](frontend/src/config/clinicaConfig.js), exportada como `clinicaConfig`.
+Permite ajustar el nombre y nombre corto de la institución, el eslogan, el subtítulo,
+el logotipo, los datos de contacto y ubicación, los textos principales de la página de
+inicio, los pasos de la guía «¿Cómo funciona?» y los parámetros descriptivos de atención
+particular.
+
+La navegación y la página de inicio consumen esta configuración para mostrar la marca,
+el contenido principal y parte de la información de contacto. La configuración de atención particular, no reemplaza las reglas de cobertura implementadas en el sistema. Estos valores deben verificarse
+y reemplazarse por datos institucionales.
+
+El detalle de las propiedades y su alcance se encuentra en la
+[especificación del sistema](docs/especificacion_sistema.md#47-configuracion-institucional-del-frontend).
+El resto de la documentación está disponible en [docs/](docs/).
