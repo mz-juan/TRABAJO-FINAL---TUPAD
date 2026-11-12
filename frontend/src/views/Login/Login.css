@@ -1,0 +1,144 @@
+.login-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 15%, var(--primary-100), transparent 34rem),
+    var(--neutral-50);
+  color: var(--neutral-800);
+}
+
+.login-topbar {
+  width: min(1120px, calc(100% - 3rem));
+  min-height: 82px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.login-back-link {
+  border: 0;
+  background: transparent;
+  color: var(--primary-700);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.login-brand-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--primary-600);
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.login-brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.login-content {
+  min-height: calc(100vh - 82px);
+  padding: 2rem 1.5rem 5rem;
+  display: grid;
+  place-items: center;
+}
+
+.login-card {
+  width: min(100%, 440px);
+  padding: 2.5rem;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-shadow: var(--shadow-xl);
+}
+
+.login-eyebrow {
+  margin-bottom: 0.5rem;
+  color: var(--primary-600);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-card h1 {
+  margin: 0;
+  color: var(--neutral-900);
+  font-size: 1.8rem;
+}
+
+.login-description {
+  margin: 0.75rem 0 1.75rem;
+  color: var(--neutral-600);
+}
+
+.login-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.login-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.login-field label {
+  color: var(--neutral-700);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--neutral-900);
+  font: inherit;
+}
+
+.login-field input:focus {
+  outline: 2px solid var(--primary-200);
+  border-color: var(--primary-600);
+}
+
+@media (max-width: 520px) {
+  .login-topbar {
+    width: calc(100% - 2rem);
+    min-height: 70px;
+  }
+
+  .login-brand {
+    font-size: 0.85rem;
+  }
+
+  .login-brand-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .login-content {
+    min-height: calc(100vh - 70px);
+    padding: 1rem;
+  }
+
+  .login-card {
+    padding: 1.75rem 1.25rem;
+  }
+}
