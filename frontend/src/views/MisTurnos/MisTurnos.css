@@ -1,1 +1,250 @@
- 
+/* ==========================================================================
+   VISTA MIS TURNOS (PANEL DEL PACIENTE) - PALETA MORADA
+   ========================================================================== */
+
+.mis-turnos-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--neutral-100);
+  color: var(--neutral-800);
+}
+
+.mis-turnos-container {
+  max-width: var(--container-max);
+  margin: 2.5rem auto;
+  padding: 0 1.5rem;
+  width: 100%;
+  flex: 1;
+}
+
+.mis-turnos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  background-color: #ffffff;
+  padding: 1.75rem 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--neutral-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.mis-turnos-title-group h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--neutral-900);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.mis-turnos-title-group p {
+  font-size: 0.95rem;
+  color: var(--neutral-500);
+}
+
+.patient-info-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-200);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary-800);
+}
+
+/* Tabs de filtrado */
+.turnos-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--neutral-200);
+  padding-bottom: 0.5rem;
+}
+
+.turnos-tab-btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--neutral-600);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.turnos-tab-btn:hover {
+  color: var(--primary-700);
+  background-color: var(--primary-50);
+}
+
+.turnos-tab-btn.active {
+  background-color: var(--primary-600);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(135, 28, 108, 0.25);
+}
+
+/* Grilla de turnos */
+.turnos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.turno-card {
+  background-color: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--neutral-200);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  transition: all var(--transition-normal);
+}
+
+.turno-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-300);
+}
+
+.turno-card.cancelado {
+  opacity: 0.75;
+  background-color: var(--neutral-50);
+}
+
+.turno-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 650px;
+}
+
+.turno-top-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.turno-especialidad {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--primary-800);
+}
+
+.badge-estado {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-estado.confirmado {
+  background-color: var(--success-light);
+  color: #065f46;
+}
+
+.badge-estado.cancelado {
+  background-color: var(--danger-light);
+  color: #991b1b;
+}
+
+.badge-estado.atendido {
+  background-color: var(--primary-100);
+  color: var(--primary-800);
+}
+
+.turno-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 2rem;
+  font-size: 0.9rem;
+}
+
+.turno-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--neutral-700);
+}
+
+.turno-detail-item svg {
+  color: var(--primary-600);
+  flex-shrink: 0;
+}
+
+.turno-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 180px;
+}
+
+/* Estado vacío */
+.turnos-empty-state {
+  background-color: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--neutral-300);
+  padding: 4rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.empty-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--primary-50);
+  color: var(--primary-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.empty-desc {
+  font-size: 0.95rem;
+  color: var(--neutral-500);
+  max-width: 440px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .mis-turnos-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .turno-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .turno-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .turno-actions {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .turno-actions button {
+    flex: 1;
+  }
+}

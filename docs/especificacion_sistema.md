@@ -113,7 +113,7 @@ El sistema vincula de manera coordinada a tres actores principales:
 
 ## 5. Modelo de datos objetivo (`backend/prisma/schema.prisma`)
 
-> Este modelo documenta el diseño esperado; no implica que el backend o las migraciones estén implementados. La migración de datos existentes se detalla en `docs/plan_correcciones.md`.
+> Este modelo documenta el diseño esperado
 
 ```prisma
 datasource db {

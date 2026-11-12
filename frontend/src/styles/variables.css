@@ -1,35 +1,54 @@
 :root {
-  /* Paleta de colores - Salud / Clínica */
-  --primary-50: #eff6ff;
-  --primary-100: #dbeafe;
-  --primary-500: #3b82f6;
-  --primary-600: #2563eb;
-  --primary-700: #1d4ed8;
+  /* Paleta de colores - Salud / Clínica con Color Principal #871c6c */
+  --primary-50: #fdf4f9;
+  --primary-100: #fae8f3;
+  --primary-200: #f5d1e8;
+  --primary-300: #ecaed5;
+  --primary-400: #dc7ebd;
+  --primary-500: #a42384;
+  --primary-600: #871c6c; /* Color Principal */
+  --primary-700: #6e1457;
+  --primary-800: #581045;
+  --primary-900: #420b33;
 
-  --accent-cyan: #06b6d4;
-  --accent-teal: #0d9488;
+  --accent-cyan: #9d257e;
+  --accent-teal: #871c6c;
+  --accent-teal-light: #fae8f3;
 
   --success: #10b981;
+  --success-light: #d1fae5;
   --warning: #f59e0b;
+  --warning-light: #fef3c7;
   --danger: #ef4444;
+  --danger-light: #fee2e2;
 
-  --neutral-50: #f8fafc;
-  --neutral-100: #f1f5f9;
-  --neutral-200: #e2e8f0;
-  --neutral-300: #cbd5e1;
-  --neutral-600: #475569;
-  --neutral-700: #334155;
-  --neutral-800: #1e293b;
-  --neutral-900: #0f172a;
+  --neutral-50: #fcfbfa;
+  --neutral-100: #f6f4f2;
+  --neutral-200: #eae6e3;
+  --neutral-300: #d7d1cb;
+  --neutral-400: #a19a92;
+  --neutral-500: #716a62;
+  --neutral-600: #544d46;
+  --neutral-700: #3c3630;
+  --neutral-800: #26221d;
+  --neutral-900: #171411;
 
   /* Tipografía */
   --font-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Sombras y bordes */
+  /* Sombras y bordes con tinte de #871c6c */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(135 28 108 / 0.08), 0 2px 4px -2px rgb(135 28 108 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(135 28 108 / 0.08), 0 4px 6px -4px rgb(135 28 108 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(135 28 108 / 0.1), 0 8px 10px -6px rgb(135 28 108 / 0.06);
+
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Contenedores y espaciados */
+  --container-max: 1200px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
 }
